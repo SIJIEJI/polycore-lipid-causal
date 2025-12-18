@@ -1,0 +1,31 @@
+
+# Figure 1E 绘图指南
+
+## 数据文件: Figure1E_RealData_PlotReady.csv
+
+## 图表设置:
+- 图表类型: 双Y轴柱状图 (Dual-axis Bar Chart)
+- X轴: Confounder (混杂因素名称)
+- 左Y轴: Confounding_Strength (橙色柱状图)
+- 右Y轴: Causal_Adjustment_Benefit (蓝绿色柱状图)
+
+## 推荐颜色:
+- 左柱 (混杂强度): #FF9F40 (橙色)
+- 右柱 (调整收益): #4BC0C0 (蓝绿色)
+
+## 标题建议:
+主标题: "Confounder Analysis & Causal Adjustment Effects"
+副标题: "Based on Real Patient Data (n=115 samples)"
+
+## 数据解读:
+- 混杂强度越高，该因素对汗液-血液关系的干扰越大
+- 调整收益越高，控制该因素后预测准确性提升越多
+- Gender 是最强的混杂因素
+
+## Excel/其他软件绘图步骤:
+1. 导入 Figure1E_RealData_PlotReady.csv
+2. 选择 Confounder 列作为X轴
+3. 创建柱状图，选择 Confounding_Strength 作为系列1
+4. 添加第二个Y轴，选择 Causal_Adjustment_Benefit 作为系列2
+5. 设置颜色：系列1用橙色，系列2用蓝绿色
+6. 调整Y轴标题和图表标题
