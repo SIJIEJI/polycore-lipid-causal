@@ -113,7 +113,7 @@ def get_feature_sets() -> dict:
     """
     return {
         "full_model": ["sweat_marker", "sweat_rate", "bmi"],
-        "confounders_only": ["sweat_rate", "bmi"],
+        "confounders_only": ["strict_non_sensor_features"],
     }
 
 
