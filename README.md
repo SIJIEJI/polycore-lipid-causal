@@ -1,13 +1,16 @@
-# PolyCORE lipid causal ML
+# PolyCORE lipid causal-analysis code
 
-Minimal reproducible code for the computational validation analysis in Figure 5h-i of the PolyCORE lipid sensing manuscript.
+Minimal public code release for the causal-assumption-guided sweat-to-blood lipid analysis in Figure 5h-i of the PolyCORE lipid sensing manuscript.
 
-This repository is intentionally scoped to the sweat-to-blood lipid prediction analysis. It does not include wet-lab fabrication protocols, raw electrochemical traces, or restricted participant-level source data.
+This repository is intentionally scoped. It exposes the causal assumptions, adjustment-set rationale, model input definitions, and Figure 5h-i style evaluation code. It does not include wet-lab fabrication protocols, raw electrochemical traces, or restricted participant-level source data.
 
 ## What Is Included
 
-- `src/reproduce_figure5hi.py`: computes 5-fold model metrics and generates Figure 5h-i style plots.
+- `src/causal_specification.py`: defines the DAG edges, adjustment sets, and causal-assumption-guided prediction feature sets.
+- `src/run_causal_adjustment.py`: writes DAG/feature-set tables and computes adjusted blood-to-sweat association diagnostics.
+- `src/reproduce_figure5hi.py`: computes 5-fold model metrics and generates Figure 5h-i style plots using the feature definitions from `src/causal_specification.py`.
 - `src/make_example_data.py`: creates synthetic schema-compatible data for smoke testing.
+- `docs/causal_model.md`: describes the causal graph and how it maps to model inputs.
 - `data/merged_data_schema.csv`: expected columns for the restricted paired sweat-blood dataset.
 - `data/figure5hi_reported_summary.csv`: aggregate Figure 5h-i reference values extracted from the submitted source-data workbook. This file contains model-level summary statistics only, not participant-level data.
 - `source_data/README.md`: explains which source-data workbooks exist and why full workbooks are not included here.
@@ -40,12 +43,42 @@ This verifies that the pipeline runs. It does not reproduce manuscript values.
 
 ```bash
 python src/make_example_data.py --out data/example_merged_data.csv
+python src/causal_specification.py --out results/causal_specification
+python src/run_causal_adjustment.py \
+  --data data/example_merged_data.csv \
+  --out results/example_causal_adjustment
 python src/reproduce_figure5hi.py \
   --data data/example_merged_data.csv \
   --out results/example \
   --bar-source cv \
   --whisker sd
 ```
+
+## Inspect The Causal Assumptions
+
+The causal assumptions are specified before model fitting:
+
+```bash
+python src/causal_specification.py --out results/causal_specification
+```
+
+Outputs:
+
+```text
+results/causal_specification/
+├── causal_dag_edges.csv
+└── causal_feature_sets.csv
+```
+
+To compute adjusted association diagnostics from a local restricted dataset:
+
+```bash
+python src/run_causal_adjustment.py \
+  --data data/merged_data.csv \
+  --out results/causal_adjustment
+```
+
+This writes `causal_adjustment_summary.csv`, where each row reports the residualized blood-to-sweat association after a specified adjustment set. These diagnostics make the adjustment logic auditable; they are separate from the predictive estimator used for Figure 5h-i.
 
 ## Reproduce Internally Consistent 5-Fold CV Outputs
 
@@ -112,4 +145,4 @@ These can be changed with command-line flags.
 
 ## Important Interpretation Notes
 
-The public aggregate summary is suitable for checking reported Figure 5h-i values, but it is not a substitute for the restricted participant-level dataset. Repeated measurements from the same participant increase the information available for model fitting; subject-grouped validation should be reported as a sensitivity analysis when evaluating generalization to unseen participants.
+The public aggregate summary is suitable for checking reported Figure 5h-i values, but it is not a substitute for the restricted participant-level dataset. The "Causal ML" label here means a predictive estimator whose inputs are selected from the causal graph and adjustment rationale. It should not be interpreted as a complete public release of every exploratory causal script. Repeated measurements from the same participant increase the information available for model fitting; subject-grouped validation should be reported as a sensitivity analysis when evaluating generalization to unseen participants.

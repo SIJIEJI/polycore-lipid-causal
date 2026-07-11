@@ -17,6 +17,8 @@ from sklearn.linear_model import Lasso, LinearRegression, Ridge
 from sklearn.metrics import mean_absolute_error, r2_score
 from sklearn.model_selection import KFold
 
+from causal_specification import model_feature_sets
+
 
 LABEL_ORDER = ["Simple", "Multi", "Ridge", "Lasso", "Causal ML"]
 TASK_ORDER = ["CH", "TG"]
@@ -86,12 +88,8 @@ def prepare_task_df(df: pd.DataFrame, task: str) -> pd.DataFrame:
     )
 
 
-def feature_columns(feature_set: str) -> list[str]:
-    feature_sets = {
-        "marker_only": ["sweat_marker"],
-        "marker_plus_rate": ["sweat_marker", "sweat_rate"],
-        "full_model": ["sweat_marker", "sweat_rate", "bmi"],
-    }
+def feature_columns(task: str, feature_set: str) -> list[str]:
+    feature_sets = model_feature_sets(task)
     return feature_sets[feature_set]
 
 
@@ -119,7 +117,7 @@ def compute_fold_metrics(df: pd.DataFrame, args: argparse.Namespace) -> pd.DataF
         splitter = KFold(n_splits=args.n_splits, shuffle=True, random_state=args.random_state)
 
         for spec in MODEL_SPECS:
-            feat_cols = feature_columns(spec.feature_set)
+            feat_cols = feature_columns(task, spec.feature_set)
             x = task_df[feat_cols].to_numpy()
             y = task_df["blood_target"].to_numpy()
             patient_ids = task_df["PatientID"].to_numpy()
