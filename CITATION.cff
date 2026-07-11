@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the associated manuscript."
+title: "PolyCORE lipid causal ML"
+authors:
+  - family-names: "Ji"
+    given-names: "Sijie"
+date-released: 2026-07-10
+

@@ -1,0 +1,26 @@
+column,description
+PatientID,Participant identifier
+Glucose (mg/dL),Blood glucose measurement
+HDL C (mg/dL),Blood HDL cholesterol measurement
+TG (mg/dL),Blood triglyceride target
+Total cholesterol (mg/dL),Blood total cholesterol target
+LDL Chol (mg/dL),Blood LDL cholesterol measurement
+Sweat Rate (uL/min),Sweat secretion rate
+Sweat CH (uM),Sweat cholesterol measurement
+Sweat TG (uM),Sweat triglyceride proxy measurement
+Age (18>),Participant age
+Gender,Encoded participant sex/gender
+HgA1C,HbA1c measurement
+Glucose,Screening glucose or physiological glucose covariate
+Blood Pressure H,Systolic blood pressure
+Blood Pressure L,Diastolic blood pressure
+Pulse,Pulse
+Weight (lb),Body weight
+CALCULATED BMI,Body mass index
+BMR (kcal),Basal metabolic rate
+Fat%,Body fat percentage
+Fat mass (lb),Fat mass
+FFM (lb),Fat-free mass
+Predicted muscle mass (lb),Predicted muscle mass
+TBW (lb),Total body water
+

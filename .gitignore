@@ -1,0 +1,10 @@
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+venv/
+results/
+
+# Restricted human-subject data. Do not commit.
+data/merged_data.csv
+
