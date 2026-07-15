@@ -31,10 +31,11 @@ The causal question behind the feature selection is whether sweat lipid
 measurements carry blood-lipid information after accounting for sweat secretion
 and participant physiology.
 
-The minimal prediction feature set used for the Figure 5h-i "Causal ML" row is:
+The minimal prediction feature set used for the Figure 5h-i "Causal ML" row is task specific:
 
 ```text
-sweat lipid marker + sweat rate + BMI
+CH: sweat cholesterol + sweat rate + BMI + sex
+TG: sweat triglyceride + sweat rate + BMI
 ```
 
 This corresponds to:
@@ -42,7 +43,9 @@ This corresponds to:
 - the sweat lipid marker as the sensor-derived signal,
 - sweat rate as a dynamic sweat-transport variable,
 - BMI as the minimal public proxy for adiposity/metabolic participant
-  physiology in the submitted Figure 5h-i model comparison.
+  physiology in the submitted Figure 5h-i model comparison,
+- sex as an additional CH adjustment variable, matching the task-specific DAG
+  described in the manuscript.
 
 The broader candidate confounder set, when available in the restricted
 participant-level dataset, includes age, gender, HbA1c/glucose, blood pressure,

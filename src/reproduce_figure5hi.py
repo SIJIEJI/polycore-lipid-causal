@@ -31,6 +31,7 @@ REQUIRED_COLUMNS = [
     "Sweat Rate (uL/min)",
     "Sweat CH (uM)",
     "Sweat TG (uM)",
+    "Gender",
     "Total cholesterol (mg/dL)",
     "TG (mg/dL)",
     "CALCULATED BMI",
@@ -49,7 +50,7 @@ MODEL_SPECS = [
     ModelSpec("Multi", "marker_plus_rate", "Linear"),
     ModelSpec("Ridge", "full_model", "Ridge"),
     ModelSpec("Lasso", "full_model", "Lasso"),
-    ModelSpec("Causal ML", "full_model", "RandomForest"),
+    ModelSpec("Causal ML", "causal_guided_minimal", "RandomForest"),
 ]
 
 
@@ -61,11 +62,12 @@ def validate_input(df: pd.DataFrame) -> None:
 
 def prepare_task_df(df: pd.DataFrame, task: str) -> pd.DataFrame:
     if task == "CH":
-        cols = ["PatientID", "Sweat CH (uM)", "Sweat Rate (uL/min)", "CALCULATED BMI", "Total cholesterol (mg/dL)"]
+        cols = ["PatientID", "Sweat CH (uM)", "Sweat Rate (uL/min)", "CALCULATED BMI", "Gender", "Total cholesterol (mg/dL)"]
         rename_map = {
             "Sweat CH (uM)": "sweat_marker",
             "Sweat Rate (uL/min)": "sweat_rate",
             "CALCULATED BMI": "bmi",
+            "Gender": "sex",
             "Total cholesterol (mg/dL)": "blood_target",
         }
     elif task == "TG":
@@ -79,13 +81,20 @@ def prepare_task_df(df: pd.DataFrame, task: str) -> pd.DataFrame:
     else:
         raise ValueError("task must be 'CH' or 'TG'")
 
-    return (
+    task_df = (
         df[cols]
         .dropna()
         .reset_index(drop=False)
         .rename(columns={"index": "row_id"})
         .rename(columns=rename_map)
     )
+    if "sex" in task_df.columns:
+        numeric_sex = pd.to_numeric(task_df["sex"], errors="coerce")
+        if numeric_sex.notna().all():
+            task_df["sex"] = numeric_sex
+        else:
+            task_df["sex"] = pd.Categorical(task_df["sex"]).codes
+    return task_df
 
 
 def feature_columns(task: str, feature_set: str) -> list[str]:

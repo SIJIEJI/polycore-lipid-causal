@@ -78,7 +78,7 @@ python src/run_causal_adjustment.py \
   --out results/causal_adjustment
 ```
 
-This writes `causal_adjustment_summary.csv`, where each row reports the residualized blood-to-sweat association after a specified adjustment set. These diagnostics make the adjustment logic auditable; they are separate from the predictive estimator used for Figure 5h-i.
+This writes `causal_adjustment_summary.csv`, where each row reports the residualized blood-to-sweat association after a specified adjustment set. These diagnostics make the adjustment logic auditable; they are separate from the predictive estimator used for Figure 5h-i. In the task-specific causal feature set, CH uses sweat cholesterol, sweat rate, BMI, and sex; TG uses sweat triglyceride, sweat rate, and BMI.
 
 ## Reproduce Internally Consistent 5-Fold CV Outputs
 

@@ -17,6 +17,7 @@ import pandas as pd
 
 SWEAT_RATE = "Sweat Rate (uL/min)"
 BMI = "CALCULATED BMI"
+SEX = "Gender"
 
 CORE_CONFOUNDER_CANDIDATES = [
     "Age (18>)",
@@ -83,30 +84,39 @@ def dag_edges(task: str) -> list[tuple[str, str, str]]:
 
 def prediction_feature_sets(task: str) -> dict[str, list[str]]:
     spec = get_task_spec(task)
+    causal_guided = [spec.sweat_marker, SWEAT_RATE, BMI]
+    if task == "CH":
+        causal_guided = [spec.sweat_marker, SWEAT_RATE, BMI, SEX]
     return {
         "marker_only": [spec.sweat_marker],
         "marker_plus_rate": [spec.sweat_marker, SWEAT_RATE],
         "full_model": [spec.sweat_marker, SWEAT_RATE, BMI],
-        "causal_guided_minimal": [spec.sweat_marker, SWEAT_RATE, BMI],
+        "causal_guided_minimal": causal_guided,
     }
 
 
 def model_feature_sets(task: str) -> dict[str, list[str]]:
     """Feature names after task-specific preprocessing in reproduce_figure5hi.py."""
+    causal_guided = ["sweat_marker", "sweat_rate", "bmi"]
+    if task == "CH":
+        causal_guided = ["sweat_marker", "sweat_rate", "bmi", "sex"]
     return {
         "marker_only": ["sweat_marker"],
         "marker_plus_rate": ["sweat_marker", "sweat_rate"],
         "full_model": ["sweat_marker", "sweat_rate", "bmi"],
-        "causal_guided_minimal": ["sweat_marker", "sweat_rate", "bmi"],
+        "causal_guided_minimal": causal_guided,
     }
 
 
 def adjustment_sets(task: str) -> dict[str, list[str]]:
     spec = get_task_spec(task)
+    causal_guided = [SWEAT_RATE, BMI]
+    if task == "CH":
+        causal_guided = [SWEAT_RATE, BMI, SEX]
     return {
         "unadjusted": [],
         "sweat_rate_adjusted": [SWEAT_RATE],
-        "causal_guided_minimal": [SWEAT_RATE, BMI],
+        "causal_guided_minimal": causal_guided,
         "candidate_confounders": [c for c in CORE_CONFOUNDER_CANDIDATES if c != spec.blood_target],
     }
 
